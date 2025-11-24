@@ -49,26 +49,17 @@ namespace SensorSim.Models
             
         }
 
-
-
-
         //Checks sensor to see if it has all valid attributes
         public static bool IsValid(Sensor sensor)
         {
-            try
-            {
-                if (sensor.Id <= 0) return false;
-                if (string.IsNullOrEmpty(sensor.Name) || sensor.Name.Length > 100) return false;
-                if (string.IsNullOrEmpty(sensor.Location) || sensor.Location.Length > 100) return false;
-                if (sensor.MinTemp <= 0 || sensor.MaxTemp <= 0) return false;
-                if (sensor.MinTemp >= sensor.MaxTemp) return false;
+            if (sensor.Id <= 0) return false;
+            if (string.IsNullOrEmpty(sensor.Name) || sensor.Name.Length > 100) return false;
+            if (string.IsNullOrEmpty(sensor.Location) || sensor.Location.Length > 100) return false;
+            if (sensor.MinTemp <= 0 || sensor.MaxTemp <= 0) return false;
+            if (sensor.MinTemp >= sensor.MaxTemp) return false;
 
-                return true;
-            }
-            catch { return false; }
+            return true;
         }
-
-
 
         //Sanitizes JSON input
         public static string SanitizeString(string input)
@@ -85,7 +76,6 @@ namespace SensorSim.Models
             return input.Trim();
         }
     }
-
 
     public class SensorInitializeException : Exception
     {

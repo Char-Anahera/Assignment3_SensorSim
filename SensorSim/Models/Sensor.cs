@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SensorSim.Models
@@ -17,77 +18,80 @@ namespace SensorSim.Models
         public double MaxTemp { get; set; }
 
 
-        //Create constructor to ensure every sensor object has all attributes
-        [JsonConstructor]
-        public Sensor(int id, string name, string location, double minTemp, double maxTemp) 
-        {
-            Id = id;
-            Name = name;
-            Location = location;
-            MinTemp = minTemp;
-            MaxTemp = maxTemp;
-        }
-
-
         private static readonly string filePath = Path.Combine("Data", "SensorConfig.json");
 
         public static Sensor? InitializeSensor()
         {
-            if (!File.Exists(filePath))
+            try
             {
-                return null;
+
+                if (!File.Exists(filePath)) { throw new SensorInitializeException("Configuration file was not found"); }
+
+                string jsonString = File.ReadAllText(filePath);
+
+                if (string.IsNullOrEmpty(jsonString)) { throw new SensorInitializeException("Configuration file is empty"); }
+
+                string verifiedString = SanitizeString(jsonString);
+
+                var newSensor = JsonSerializer.Deserialize<Sensor>(verifiedString);
+
+                if (newSensor == null) { throw new SensorInitializeException("Object could not be parsed"); }
+
+                if (IsValid(newSensor) == false) { throw new SensorInitializeException("Sensor configuration is invalid"); }
+
+                return newSensor;
+
             }
-
-            string jsonString = File.ReadAllText(filePath);
-
-            if (string.IsNullOrEmpty(jsonString))
+            catch (Exception ex)
             {
-                return null;
+                throw new SensorInitializeException($"Invalid JSON format: {ex.Message}");
             }
-
-            var newSensor = JsonSerializer.Deserialize<Sensor>(jsonString);
-
-            if (IsValid(newSensor) == false)
-            {
-                return null;
-            }
-
-            return newSensor;
+            
         }
+
+
+
 
         //Checks sensor to see if it has all valid attributes
-        public static Boolean IsValid(Sensor sensor)
+        public static bool IsValid(Sensor sensor)
         {
-            if (sensor.Id <= 0) return false;
-            if (string.IsNullOrEmpty(sensor.Name)) return false;
-            if (string.IsNullOrEmpty(sensor.Location)) return false;
-            if (sensor.MinTemp <= 0 || sensor.MaxTemp <= 0) return false;
-            if (sensor.MinTemp >= sensor.MaxTemp) return false;
+            try
+            {
+                if (sensor.Id <= 0) return false;
+                if (string.IsNullOrEmpty(sensor.Name) || sensor.Name.Length < 100) return false;
+                if (string.IsNullOrEmpty(sensor.Location) || sensor.Location.Length < 100) return false;
+                if (sensor.MinTemp <= 0 || sensor.MaxTemp <= 0) return false;
+                if (sensor.MinTemp >= sensor.MaxTemp) return false;
 
-            return true;
+                return true;
+            }
+            catch { return false; }
         }
 
 
 
-        //// Load sensor from config file
-        //public static Sensor? LoadSensor()
-        //{
-        //    try
-        //    {
-        //        if (!File.Exists(filePath))
-        //        {
-        //            return null;
-        //        }
+        //Sanitizes JSON input
+        public static string SanitizeString(string input)
+        {
+            // Remove <script> tags
+            input = Regex.Replace(input, "<script.*?>.*?</script>", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        //        string jsonString = File.ReadAllText(filePath);
+            // Remove all HTML tags like <tag>
+            input = Regex.Replace(input, "<.*?>", "");
 
-        //        Sensor obj = JsonSerializer.Deserialize<Sensor>(jsonString);
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
-        
+            // Remove dangerous control characters
+            input = Regex.Replace(input, @"[\x00-\x1F]", "");
+
+            return input.Trim();
+        }
     }
+
+
+    public class SensorInitializeException : Exception
+    {
+        public SensorInitializeException(string message) : base(message)
+        {
+        }
+    }
+
 }

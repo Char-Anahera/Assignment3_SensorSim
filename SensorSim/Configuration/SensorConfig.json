@@ -1,0 +1,7 @@
+{
+	"Id": 1,
+	"Name": "Sensor 1",
+	"Location": "Wellington",
+	"MinTemp": 22,
+	"MaxTemp": 24
+}

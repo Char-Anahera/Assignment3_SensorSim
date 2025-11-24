@@ -18,7 +18,7 @@ namespace SensorSim.Models
         public double MaxTemp { get; set; }
 
 
-        private static readonly string filePath = Path.Combine("Data", "SensorConfig.json");
+        private static readonly string filePath = Path.Combine(AppContext.BaseDirectory, "Configuration", "SensorConfig.json");
 
         public static Sensor? InitializeSensor()
         {
@@ -58,8 +58,8 @@ namespace SensorSim.Models
             try
             {
                 if (sensor.Id <= 0) return false;
-                if (string.IsNullOrEmpty(sensor.Name) || sensor.Name.Length < 100) return false;
-                if (string.IsNullOrEmpty(sensor.Location) || sensor.Location.Length < 100) return false;
+                if (string.IsNullOrEmpty(sensor.Name) || sensor.Name.Length > 100) return false;
+                if (string.IsNullOrEmpty(sensor.Location) || sensor.Location.Length > 100) return false;
                 if (sensor.MinTemp <= 0 || sensor.MaxTemp <= 0) return false;
                 if (sensor.MinTemp >= sensor.MaxTemp) return false;
 

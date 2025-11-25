@@ -24,10 +24,6 @@ namespace Sensors
             {
                 Console.WriteLine($"Failed to initialize sensor {ex.Message}");
             }
-            
-
-            
-
         }
     }
 }

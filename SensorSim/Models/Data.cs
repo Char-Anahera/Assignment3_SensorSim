@@ -71,24 +71,3 @@ namespace SensorSim.Models
         }
     }
 }
-
-//while (true)
-//{
-//    double tempC = GenerateTemperature();
-//    Console.WriteLine($"{DateTime.Now:HH:mm:ss}  Temperature: {tempC:F1} °C");
-//    Thread.Sleep(1000);
-//    var reading = new Reading();
-//    reading.SensorName = sensorName;
-//    reading.DateTime = DateTime.Now;
-//    reading.Value = tempC;
-
-
-//}
-//        }
-
-//        private static double GenerateTemperature()
-//{
-//    const double mean = 22.0;
-//    const double variation = 5.0;
-//    return mean + (Random.NextDouble() * 2 - 1) * variation;
-//}

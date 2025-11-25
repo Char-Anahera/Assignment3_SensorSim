@@ -15,9 +15,7 @@ namespace Sensors
                 {
                     var data = new Data();
                     var sensorData = data.SimulateData(newSensor);
-
-
-                    Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature} °C");
+                    Console.WriteLine(sensorData.LogData(sensorData));
                     Thread.Sleep(1000);
                 }
 

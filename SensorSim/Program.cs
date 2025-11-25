@@ -9,15 +9,18 @@ namespace Sensors
         {
             try
             {
-                var sensor = Sensor.InitializeSensor();
+                var newSensor = Sensor.InitializeSensor();
 
-                if (sensor != null)
+                while (true)
                 {
-                    Console.WriteLine("Sensor ID:" + sensor.Id);
-                    Console.WriteLine("Sensor Name:" + sensor.Name);
-                    Console.WriteLine("Sensor Location:" + sensor.Location);
-                    Console.WriteLine("Sensor Initialized Successfully");
+                    var data = new Data();
+                    var sensorData = data.SimulateData(newSensor);
+
+
+                    Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature} °C");
+                    Thread.Sleep(1000);
                 }
+
             }
             catch(SensorInitializeException ex)
             {

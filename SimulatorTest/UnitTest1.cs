@@ -77,4 +77,9 @@ namespace SensorSim.Test
 
         }
     }
+
+    public class DataTests
+    {
+
+    }
 }

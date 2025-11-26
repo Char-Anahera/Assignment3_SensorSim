@@ -68,7 +68,7 @@ namespace SensorSim.Models
             }
             catch (Exception ex)
             {
-                throw new SensorInitializeException($"Invalid JSON format: {ex.Message}");
+                throw new SensorInitializeException($"{ex.Message}");
             }
 
         }
@@ -114,6 +114,11 @@ namespace SensorSim.Models
             }
         }
 
+        public static void StopSensor()
+        {
+            sensorOn = false;
+            Console.WriteLine("Sensor has stopped");
+        }
     }
 }
 

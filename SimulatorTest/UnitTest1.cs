@@ -82,6 +82,9 @@ namespace SensorSim.Test
     {
 
         [Fact]
-        public void GetDataFrom() {
+        public void GetDataFrom() 
+        { 
+
+        }
     }
 }

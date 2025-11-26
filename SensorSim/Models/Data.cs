@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SensorSim.Configuration;
 
 namespace SensorSim.Models
 {
@@ -54,17 +55,11 @@ namespace SensorSim.Models
         }
 
         // Log data method, calls the storeData method and returns a formatted string
-        public string LogData(Data sensorData)
+        public void LogData(Data sensorData)
         {
-            Data.StoreData(sensorData);
+            DataRepo.StoreData(sensorData);
 
-            return $"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C";
-        }
-
-
-        public static void StoreData(Data sensorData)
-        {
-
+            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
         }
     }
 }

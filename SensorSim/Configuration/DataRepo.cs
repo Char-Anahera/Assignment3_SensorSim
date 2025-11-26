@@ -28,7 +28,7 @@ namespace SensorSim.Configuration
             insertCmd.ExecuteNonQuery();
         }
 
-        public List<Data> GetData()
+        public List<Data> GetAllData()
         {
             var results = new List<Data>();
 
@@ -100,6 +100,16 @@ namespace SensorSim.Configuration
             }
 
             return results;
+        }
+
+        public void ResetSensorData()
+        {
+            using var connection = new SqliteConnection(Database.ConnectionString);
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = "DELETE FROM SensorData;";
+            cmd.ExecuteNonQuery();
         }
     }
 }

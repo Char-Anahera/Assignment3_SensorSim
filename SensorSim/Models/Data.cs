@@ -42,6 +42,8 @@ namespace SensorSim.Models
             }
         }
 
+
+
         // check for if data is valid, based on the sensors parameters
         public static bool ValidateData(Data sensorData, Sensor sensor)
         {
@@ -53,6 +55,8 @@ namespace SensorSim.Models
             // Returns true if passes
             else return true;
         }
+
+
 
         // Log data method, calls the storeData method and returns a formatted string
         public void LogData(Data sensorData)
@@ -66,10 +70,13 @@ namespace SensorSim.Models
                 Console.WriteLine("Unusual reading. Anomaly detected.");
             }
 
-            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
-            Console.WriteLine($" Average Temperature: {SmoothData():F2} °C");
+            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2}°C");
+            Console.WriteLine($" Average Temperature: {SmoothData():F2}°C");
             Console.WriteLine();
         }
+
+
+
 
         public static double SmoothData()
         {

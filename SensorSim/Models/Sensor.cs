@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SensorSim.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -114,6 +115,10 @@ namespace SensorSim.Models
             return input.Trim();
         }
 
+
+
+
+
         // startSensor loop
         public static void StartSensor()
         {
@@ -137,6 +142,7 @@ namespace SensorSim.Models
             }
         }
 
+
         // stopSensor
         public static void StopSensor()
         {
@@ -144,7 +150,59 @@ namespace SensorSim.Models
             sensorOn = false;
 
             // prints line confirming sensor has stopped
+            Console.WriteLine();
             Console.WriteLine("Sensor has stopped");
+            Console.WriteLine();
+        }
+
+
+
+        public static void ResetSensor()
+        {
+            var dataRepo = new DataRepo();
+            dataRepo.ResetSensorData();
+
+            Console.WriteLine();
+            Console.WriteLine("Sensor was reset.");
+            Console.WriteLine();
+        }
+
+
+        public static void ViewHistory()
+        {
+            var dataRepo = new DataRepo();
+            var history = dataRepo.GetAllData();
+
+            foreach(Data data in history)
+            {
+                Console.WriteLine($"Sensor: {data.SensorName} logged {data.Temperature:F2}°C at {data.DateTime:HH:mm:ss}");
+                Console.WriteLine();
+            }
+        }
+
+
+        public static void GetAverage()
+        {
+            double smoothedAverage = Data.SmoothData();
+            double recentAverage = Data.FindRecentAverage();
+            double totalAverage = 0;
+
+            var dataRepo = new DataRepo();
+            var history = dataRepo.GetAllData();
+
+            foreach (Data data in history)
+            {
+                totalAverage = totalAverage + data.Temperature;
+            }
+
+            totalAverage = totalAverage / recentAverage;
+
+            Console.WriteLine();
+            Console.WriteLine($"Smoothed average is {smoothedAverage:F2}°C");
+            Console.WriteLine($"Average from last 15 entries is: {recentAverage:F2}°C");
+            Console.WriteLine($"Total average is: {totalAverage:F2}°C");
+            Console.WriteLine();
+
         }
     }
 }

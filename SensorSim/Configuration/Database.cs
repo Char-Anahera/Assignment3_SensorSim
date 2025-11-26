@@ -10,8 +10,10 @@ namespace SensorSim.Configuration
 {
     public static class Database
     {
+        //defines the database file
         private static readonly string connectionString = "Data Source=sensordata.db";
 
+        // creates table if it doesn't exist
         public static void Initialize()
         {
             using var connection = new SqliteConnection(connectionString);
@@ -29,6 +31,7 @@ namespace SensorSim.Configuration
             tableCmd.ExecuteNonQuery();
         }
 
+        // sets the connection string to be called on by other classes
         public static string ConnectionString => connectionString;
     }
 }

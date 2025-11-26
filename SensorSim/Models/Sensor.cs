@@ -36,6 +36,108 @@ namespace SensorSim.Models
             MaxTemp = maxTemp;
         }
 
+
+        // startSensor loop
+        public static void StartSensor()
+        {
+            // turns sensor on
+            sensorOn = true;
+
+            // calls InitializeSensor to return clean sensor
+            var newSensor = InitializeSensor();
+
+            while (sensorOn)
+            {
+                // calls simulateData to produce a reading
+                var data = new Data();
+                var sensorData = data.SimulateData(newSensor);
+
+                // calls logData method
+                sensorData.LogData(sensorData);
+
+                // pauses simulator
+                Thread.Sleep(1000);
+            }
+        }
+
+
+        // stopSensor method
+        public static void StopSensor()
+        {
+            // turns sensor off
+            sensorOn = false;
+
+            // prints line confirming sensor has stopped
+            Console.WriteLine();
+            Console.WriteLine("Sensor has stopped");
+            Console.WriteLine();
+        }
+
+
+        // reset sensor method
+        public static void ResetSensor()
+        {
+            // creates repo to access database
+            var dataRepo = new DataRepo();
+
+            // calls resetSensorData method to remove all existing data
+            dataRepo.ResetSensorData();
+
+            // prints line confirming sensor was reset
+            Console.WriteLine();
+            Console.WriteLine("Sensor was reset.");
+            Console.WriteLine();
+        }
+
+
+        // view history method
+        public static void ViewHistory()
+        {
+            // creates repo to access database
+            var dataRepo = new DataRepo();
+
+            // gets list of all data
+            var history = dataRepo.GetAllData();
+
+            // loop to print every data entry
+            foreach (Data data in history)
+            {
+                Console.WriteLine($"Sensor: {data.SensorName} logged {data.Temperature:F2}°C at {data.DateTime:HH:mm:ss}");
+                Console.WriteLine();
+            }
+        }
+
+        // get average method
+        public static void GetAverage()
+        {
+            // sets averages based on data methods
+            double smoothedAverage = Data.SmoothData();
+            double recentAverage = Data.FindRecentAverage();
+
+            // calculates average of all inputs 
+            double totalAverage = 0;
+
+            var dataRepo = new DataRepo();
+            var history = dataRepo.GetAllData();
+
+            foreach (Data data in history)
+            {
+                totalAverage = totalAverage + data.Temperature;
+            }
+
+            totalAverage = totalAverage / history.Count;
+
+            //formats and prints all averages
+            Console.WriteLine();
+            Console.WriteLine($"Smoothed average is {smoothedAverage:F2}°C");
+            Console.WriteLine($"Average from last 15 entries is: {recentAverage:F2}°C");
+            Console.WriteLine($"Total average is: {totalAverage:F2}°C");
+            Console.WriteLine();
+
+        }
+
+
+
         // method to initialize sensor. Checks sensor can be used before returning it
         public static Sensor? InitializeSensor()
         {
@@ -113,96 +215,6 @@ namespace SensorSim.Models
             input = Regex.Replace(input, @"[\x00-\x1F]", "");
 
             return input.Trim();
-        }
-
-
-
-
-
-        // startSensor loop
-        public static void StartSensor()
-        {
-            // turns sensor on
-            sensorOn = true;
-
-            // calls InitializeSensor to return clean sensor
-            var newSensor = InitializeSensor();
-
-            while (sensorOn)
-            {
-                // calls simulateData to produce a reading
-                var data = new Data();
-                var sensorData = data.SimulateData(newSensor);
-
-                // calls logData method
-                sensorData.LogData(sensorData);
-
-                // pauses simulator
-                Thread.Sleep(1000);
-            }
-        }
-
-
-        // stopSensor
-        public static void StopSensor()
-        {
-            // turns sensor off
-            sensorOn = false;
-
-            // prints line confirming sensor has stopped
-            Console.WriteLine();
-            Console.WriteLine("Sensor has stopped");
-            Console.WriteLine();
-        }
-
-
-
-        public static void ResetSensor()
-        {
-            var dataRepo = new DataRepo();
-            dataRepo.ResetSensorData();
-
-            Console.WriteLine();
-            Console.WriteLine("Sensor was reset.");
-            Console.WriteLine();
-        }
-
-
-        public static void ViewHistory()
-        {
-            var dataRepo = new DataRepo();
-            var history = dataRepo.GetAllData();
-
-            foreach(Data data in history)
-            {
-                Console.WriteLine($"Sensor: {data.SensorName} logged {data.Temperature:F2}°C at {data.DateTime:HH:mm:ss}");
-                Console.WriteLine();
-            }
-        }
-
-
-        public static void GetAverage()
-        {
-            double smoothedAverage = Data.SmoothData();
-            double recentAverage = Data.FindRecentAverage();
-            double totalAverage = 0;
-
-            var dataRepo = new DataRepo();
-            var history = dataRepo.GetAllData();
-
-            foreach (Data data in history)
-            {
-                totalAverage = totalAverage + data.Temperature;
-            }
-
-            totalAverage = totalAverage / recentAverage;
-
-            Console.WriteLine();
-            Console.WriteLine($"Smoothed average is {smoothedAverage:F2}°C");
-            Console.WriteLine($"Average from last 15 entries is: {recentAverage:F2}°C");
-            Console.WriteLine($"Total average is: {totalAverage:F2}°C");
-            Console.WriteLine();
-
         }
     }
 }

@@ -10,6 +10,7 @@ namespace SensorSim.Configuration
 {
     public class DataRepo
     {
+        // StoreData method to insert sensor data into database
         public void StoreData(Data data)
         {
             using var connection = new SqliteConnection(Database.ConnectionString);
@@ -28,6 +29,7 @@ namespace SensorSim.Configuration
             insertCmd.ExecuteNonQuery();
         }
 
+        // method to retrieve all entries currently in the dataase
         public List<Data> GetAllData()
         {
             var results = new List<Data>();
@@ -52,6 +54,7 @@ namespace SensorSim.Configuration
             return results;
         }
 
+        // method to get the last 15 temperatures to use to find average
         public List<double> GetAverageTemps()
         {
             var results = new List<double>();
@@ -77,6 +80,7 @@ namespace SensorSim.Configuration
             return results;
         }
 
+        // method to get the last 5 temperatures to make a rolling average
         public List<double> GetRecentTemps()
         {
             var results = new List<double>();
@@ -102,6 +106,7 @@ namespace SensorSim.Configuration
             return results;
         }
 
+        // method to remove all information from the table 
         public void ResetSensorData()
         {
             using var connection = new SqliteConnection(Database.ConnectionString);

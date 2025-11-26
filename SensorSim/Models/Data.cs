@@ -61,15 +61,19 @@ namespace SensorSim.Models
         // Log data method, calls the storeData method and returns a formatted string
         public void LogData(Data sensorData)
         {
+            // creates repo to acccess database
             var repo = new DataRepo();
 
+            // stores data in the database
             repo.StoreData(sensorData);
 
+            // checks if data could be an anomaly. Notifies user if true
             if (DetectAnomaly(sensorData))
             {
                 Console.WriteLine("Unusual reading. Anomaly detected.");
             }
 
+            // displays to user the recent data and smoothed data average
             Console.WriteLine($"{sensorData.DateTime:HH:mm:ss}     Temperature: {sensorData.Temperature:F2}°C");
             Console.WriteLine($"            Average: {SmoothData():F2}°C");
             Console.WriteLine();
@@ -77,12 +81,14 @@ namespace SensorSim.Models
 
 
 
-
+        // smooth data method to reduce noise and give a clean average
         public static double SmoothData()
         {
+            // creates repo to access database
             var repo = new DataRepo();
             var history = repo.GetRecentTemps();
 
+            // calculates average of the last 5 entries
             double average = 0;
 
             foreach (var t in history)
@@ -92,14 +98,20 @@ namespace SensorSim.Models
 
             double smoothedData = average / history.Count;
 
+            // return average
             return smoothedData;
         }
 
+        // detect anomaly method to check if a value deviates from the recent average
         public static bool DetectAnomaly(Data data)
         {
+            // calls method to find the recent average
             double average = FindRecentAverage();
+
+            // defines what spikes are
             double sensitivity = 1;
 
+            // checks if temperature is between the upper and lower bounds of the average
             if(data.Temperature > (average + sensitivity) || data.Temperature < (average - sensitivity))
             {
                 return true;
@@ -107,11 +119,15 @@ namespace SensorSim.Models
             return false;
         }
 
+
+        // find recent average method to find the average of last 15 data entries
         public static double FindRecentAverage()
         {
+            // calls repo to access database
             var repo = new DataRepo();
             var history = repo.GetAverageTemps();
 
+            // calculates average
             double average = 0;
 
             foreach(var t in history)
@@ -121,6 +137,7 @@ namespace SensorSim.Models
 
             average = average / history.Count;
 
+            //returns average
             return average;
         }
     }

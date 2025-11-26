@@ -20,6 +20,7 @@ namespace Sensors
                 {
                     try
                     {
+                        // app menu
                         Console.WriteLine("===============================================");
                         Console.WriteLine("            Sensor Simulator");
                         Console.WriteLine("      Please choose an option to begin");
@@ -32,9 +33,12 @@ namespace Sensors
                         Console.WriteLine("4: Reset Sensor");
                         Console.WriteLine();
 
+                        // checks users input
                         string input = Console.ReadLine();
                         int option = Convert.ToInt32(input);
 
+
+                        // execute function based on user input
                         switch (option)
                         {
                             case 1:
@@ -44,35 +48,36 @@ namespace Sensors
                                 Thread keyDetectionThread = new Thread(DetectKey);
                                 keyDetectionThread.Start();
 
-                                Console.WriteLine();
                                 // prints line to inform user they can quit at any time
+                                Console.WriteLine();
                                 Console.WriteLine("Press Q to return to home");
                                 Console.WriteLine();
 
-                                //starts sensor loop
+                                // starts sensor loop
                                 Sensor.StartSensor();
                                 break;
 
                             case 2:
-                                // prints line to inform user they can quit at any time
+                                // calls on view history method
                                 Sensor.ViewHistory();
                                 break;
 
                             case 3:
-                                // prints line to inform user they can quit at any time
+                                // calls on get average method
                                 Sensor.GetAverage();
                                 break;
 
                             case 4:
-                                // prints line to inform user they can quit at any time
+                                // prints method confirming user wants to reset sensor
                                 Console.WriteLine();
-                                Console.WriteLine("Are you sure you want to delete the sensor history? You cannot get this back.");
+                                Console.WriteLine("Are you sure you want to reset this sensor? You cannot undo this action.");
                                 Console.WriteLine("This will remove all history and reset all averages.");
-                                Console.WriteLine("Y - yes");
-                                Console.WriteLine("N - no");
+                                Console.WriteLine("Y - Yes");
+                                Console.WriteLine("N - No");
 
                                 string confirmReset = Console.ReadLine();
 
+                                // only resets if user presses y
                                 if (confirmReset == "Y" || confirmReset == "y")
                                 {
                                     Sensor.ResetSensor();
@@ -81,12 +86,14 @@ namespace Sensors
                                 break;
 
                             default:
+                                // catches if a number higher than 4 is chosen
                                 Console.WriteLine();
                                 Console.WriteLine("Please choose an option 1 - 4");
                                 Console.WriteLine();
                                 break;
                         }
                     }
+                    //catches if user doesnt input a number
                     catch (FormatException)
                     {
                         Console.WriteLine();

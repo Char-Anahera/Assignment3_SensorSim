@@ -2,6 +2,13 @@
 
 This repository contains the working code for a console application that simulates temperature readings of a sensor. 
 
+## Set up
+This application runs using SQLite. If there are errors with the database, please follow the steps below to ensure SQLite is installed correctly.
+1. Open the terminal using ctrl + `
+2. Change directory to SensorSim `cd SensorSim`
+3. Enter `dotnet add package Microsoft.Data.Sqlite`
+
+
 ### How to run
 The application runs on a number system on start up. Choosing an option will invoke a method. The options are:
 1. Start Sensor - This will start the sensor and produce readings. Readings will be logged on screen and into a database. The 'Q' key can be pressed at any time to stop the simulation. Data will be saved

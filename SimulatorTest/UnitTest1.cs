@@ -1,5 +1,6 @@
 using System;
 using SensorSim.Models;
+using SensorSim.Configuration;
 
 namespace SensorSim.Test
 
@@ -78,15 +79,23 @@ namespace SensorSim.Test
         }
 
         [Fact]
-        public void StartSimulation()
+        public void SimulatorIsStarted()
         {
+            // Arrange
+            Sensor.StartSensor();
 
+            // Assert
+            Assert.True(Sensor.sensorOn);
         }
 
         [Fact]
-        public void StopSimulation()
+        public void SimulatorHasStopped()
         {
+            // Arrange
+            Sensor.StopSensor();
 
+            // Assert
+            Assert.False(Sensor.sensorOn);
         }
     }
 
@@ -141,21 +150,19 @@ namespace SensorSim.Test
         }
 
         [Fact]
-        public void FormatsDataCorrect()
+        public void DetectAnAnomaly()
         {
             // Arrange
-            var newData = new Data();
-            newData.SensorName = "Name";
-            newData.Temperature = 11.123456789;
-            newData.DateTime = new DateTime(2025, 1, 1, 12, 30, 0);
+            var data = new Data();
+            data.Temperature = 150;
 
             // Act
-            string dataFormat = newData.LogData(newData);
-            string expected = "12:30:00 Temperature: 11.12 °C";
+            bool anomalyReading = data.DetectAnomaly(data);
 
             // Assert
-            Assert.Equal(expected, dataFormat);
-
+            Assert.True(anomalyReading);
         }
+
+
     }
 }

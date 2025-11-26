@@ -62,5 +62,35 @@ namespace SensorSim.Models
 
             Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
         }
+
+        public bool DetectAnomaly(Data data)
+        {
+            double average = FindRecentAverage();
+            double sensitivity = 1 ;
+
+            if(data.Temperature > (average + sensitivity) || data.Temperature < (average - sensitivity))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public double FindRecentAverage()
+        {
+            var repo = new DataRepo();
+            var history = repo.GetRecentTemps();
+
+            double average = 0;
+
+            foreach(var t in history)
+            {
+                average += t;
+            }
+
+            average = average / history.Count;
+
+            return average;
+        }
     }
 }

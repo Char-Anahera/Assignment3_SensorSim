@@ -36,7 +36,7 @@ namespace SensorSim.Configuration
             connection.Open();
 
             var selectCmd = connection.CreateCommand();
-            selectCmd.CommandText = "SELECT SensorName, Temperature, RecordedAt FROM SensorData;";
+            selectCmd.CommandText = @"SELECT SensorName, Temperature, RecordedAt FROM SensorData;";
 
             using var reader = selectCmd.ExecuteReader();
             while (reader.Read())
@@ -47,6 +47,31 @@ namespace SensorSim.Configuration
                     Temperature = reader.GetDouble(1),
                     DateTime = DateTime.Parse(reader.GetString(2))
                 });
+            }
+
+            return results;
+        }
+
+        public List<double> GetRecentTemps()
+        {
+            var results = new List<double>();
+
+            using var connection = new SqliteConnection(Database.ConnectionString);
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText =
+            @"
+                SELECT Temperature
+                FROM SensorData
+                ORDER BY Id DESC
+                LIMIT 15;
+            ";
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                results.Add(reader.GetDouble(0));
             }
 
             return results;

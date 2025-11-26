@@ -11,8 +11,13 @@ namespace SensorSim.Models
 {
     public class Sensor
     {
+
+        private static bool sensorOn = false;
+
+        private static readonly string filePath = Path.Combine(AppContext.BaseDirectory, "Configuration", "SensorConfig.json");
+
         public int Id { get; set; }
-        public string Name {  get; set; }
+        public string Name { get; set; }
         public string Location { get; set; }
         public double MinTemp { get; set; }
         public double MaxTemp { get; set; }
@@ -27,37 +32,35 @@ namespace SensorSim.Models
             MaxTemp = maxTemp;
         }
 
-        private static readonly string filePath = Path.Combine(AppContext.BaseDirectory, "Configuration", "SensorConfig.json");
-
         public static Sensor? InitializeSensor()
         {
             try
             {
 
-                if (!File.Exists(filePath)) 
-                { 
-                    throw new SensorInitializeException("Configuration file was not found"); 
+                if (!File.Exists(filePath))
+                {
+                    throw new SensorInitializeException("Configuration file was not found");
                 }
 
                 string jsonString = File.ReadAllText(filePath);
 
-                if (string.IsNullOrEmpty(jsonString)) 
-                { 
-                    throw new SensorInitializeException("Configuration file is empty"); 
+                if (string.IsNullOrEmpty(jsonString))
+                {
+                    throw new SensorInitializeException("Configuration file is empty");
                 }
 
                 string verifiedString = SanitizeString(jsonString);
 
                 var newSensor = JsonSerializer.Deserialize<Sensor>(verifiedString);
 
-                if (newSensor == null) 
-                { 
-                    throw new SensorInitializeException("Object could not be parsed"); 
+                if (newSensor == null)
+                {
+                    throw new SensorInitializeException("Object could not be parsed");
                 }
 
-                if (IsValid(newSensor) == false) 
-                { 
-                    throw new SensorInitializeException("Sensor configuration is invalid"); 
+                if (IsValid(newSensor) == false)
+                {
+                    throw new SensorInitializeException("Sensor configuration is invalid");
                 }
 
                 return newSensor;
@@ -67,7 +70,7 @@ namespace SensorSim.Models
             {
                 throw new SensorInitializeException($"Invalid JSON format: {ex.Message}");
             }
-            
+
         }
 
         //Checks sensor to see if it has all valid attributes
@@ -96,7 +99,23 @@ namespace SensorSim.Models
 
             return input.Trim();
         }
+
+        public static void StartSensor()
+        {
+            sensorOn = true;
+            var newSensor = Sensor.InitializeSensor();
+
+            while (sensorOn)
+            {
+                var data = new Data();
+                var sensorData = data.SimulateData(newSensor);
+                Console.WriteLine(sensorData.LogData(sensorData));
+                Thread.Sleep(1000);
+            }
+        }
+
     }
+}
 
     public class SensorInitializeException : Exception
     {
@@ -104,5 +123,3 @@ namespace SensorSim.Models
         {
         }
     }
-
-}

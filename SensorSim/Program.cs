@@ -9,15 +9,16 @@ namespace Sensors
         {
             try
             {
-                var newSensor = Sensor.InitializeSensor();
+                Data.StartSensor();
+                //var newSensor = Sensor.InitializeSensor();
 
-                while (true)
-                {
-                    var data = new Data();
-                    var sensorData = data.SimulateData(newSensor);
-                    Console.WriteLine(sensorData.LogData(sensorData));
-                    Thread.Sleep(1000);
-                }
+                //while (true)
+                //{
+                //    var data = new Data();
+                //    var sensorData = data.SimulateData(newSensor);
+                //    Console.WriteLine(sensorData.LogData(sensorData));
+                //    Thread.Sleep(1000);
+                //}
 
             }
             catch(SensorInitializeException ex)

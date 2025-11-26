@@ -11,16 +11,13 @@ namespace SensorSim.Models
     {
         private static readonly Random Random = new();
 
+
         public string SensorName { get; set; }
         public double Temperature {  get; set; }
         public DateTime DateTime { get; set; }
 
 
-        public void StartSensor(Sensor sensor) 
-        {
-
-
-        }
+        
 
         public Data SimulateData(Sensor sensor)
         {

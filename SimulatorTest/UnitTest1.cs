@@ -81,5 +81,7 @@ namespace SensorSim.Test
     public class DataTests
     {
 
+        [Fact]
+        public void GetDataFrom() {
     }
 }

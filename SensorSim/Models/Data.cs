@@ -43,7 +43,7 @@ namespace SensorSim.Models
         }
 
         // check for if data is valid, based on the sensors parameters
-        public bool ValidateData(Data sensorData, Sensor sensor)
+        public static bool ValidateData(Data sensorData, Sensor sensor)
         {
             // Checks if data exists and if it falls between the sensors set range
             if (sensorData == null) return false;
@@ -67,11 +67,28 @@ namespace SensorSim.Models
             }
 
             Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
+            Console.WriteLine($" Average Temperature: {SmoothData():F2} °C");
             Console.WriteLine();
         }
 
+        public static double SmoothData()
+        {
+            var repo = new DataRepo();
+            var history = repo.GetRecentTemps();
 
-        public bool DetectAnomaly(Data data)
+            double average = 0;
+
+            foreach (var t in history)
+            {
+                average += t;
+            }
+
+            double smoothedData = average / history.Count;
+
+            return smoothedData;
+        }
+
+        public static bool DetectAnomaly(Data data)
         {
             double average = FindRecentAverage();
             double sensitivity = 1;
@@ -83,7 +100,7 @@ namespace SensorSim.Models
             return false;
         }
 
-        public double FindRecentAverage()
+        public static double FindRecentAverage()
         {
             var repo = new DataRepo();
             var history = repo.GetAverageTemps();

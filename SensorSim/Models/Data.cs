@@ -18,6 +18,7 @@ namespace SensorSim.Models
         public double Temperature {  get; set; }
         public DateTime DateTime { get; set; }
 
+
         // Simulate data method. Uses parsed sensor as parameters, returns the data it simulated
         public Data SimulateData(Sensor sensor)
         {
@@ -43,9 +44,8 @@ namespace SensorSim.Models
         }
 
 
-
         // check for if data is valid, based on the sensors parameters
-        public static bool ValidateData(Data sensorData, Sensor sensor)
+        public bool ValidateData(Data sensorData, Sensor sensor)
         {
             // Checks if data exists and if it falls between the sensors set range
             if (sensorData == null) return false;
@@ -55,7 +55,6 @@ namespace SensorSim.Models
             // Returns true if passes
             else return true;
         }
-
 
 
         // Log data method, calls the storeData method and returns a formatted string
@@ -80,7 +79,6 @@ namespace SensorSim.Models
         }
 
 
-
         // smooth data method to reduce noise and give a clean average
         public static double SmoothData()
         {
@@ -103,7 +101,7 @@ namespace SensorSim.Models
         }
 
         // detect anomaly method to check if a value deviates from the recent average
-        public static bool DetectAnomaly(Data data)
+        public bool DetectAnomaly(Data data)
         {
             // calls method to find the recent average
             double average = FindRecentAverage();

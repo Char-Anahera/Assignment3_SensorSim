@@ -13,7 +13,7 @@ namespace SensorSim.Models
     public class Sensor
     {
         // sets status for sensor being on or off
-        private static bool sensorOn = false;
+        public static bool sensorOn = false;
 
         //sets path for configuration file
         private static readonly string filePath = Path.Combine(AppContext.BaseDirectory, "Configuration", "SensorConfig.json");

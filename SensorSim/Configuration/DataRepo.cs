@@ -80,6 +80,7 @@ namespace SensorSim.Configuration
             return results;
         }
 
+
         // method to get the last 5 temperatures to make a rolling average
         public List<double> GetRecentTemps()
         {

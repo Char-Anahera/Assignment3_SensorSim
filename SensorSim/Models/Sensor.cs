@@ -132,11 +132,6 @@ namespace SensorSim.Models
                 // calls logData method
                 sensorData.LogData(sensorData);
 
-                if (data.DetectAnomaly(sensorData))
-                {
-                    Console.WriteLine("Unusual reading. Anomaly detected.");
-                }
-
                 // pauses simulator
                 Thread.Sleep(1000);
             }

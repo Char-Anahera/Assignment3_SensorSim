@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SensorSim.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SensorSim.Configuration;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SensorSim.Models
 {
@@ -60,13 +61,20 @@ namespace SensorSim.Models
 
             repo.StoreData(sensorData);
 
+            if (DetectAnomaly(sensorData))
+            {
+                Console.WriteLine("Unusual reading. Anomaly detected.");
+            }
+
             Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
+            Console.WriteLine();
         }
+
 
         public bool DetectAnomaly(Data data)
         {
             double average = FindRecentAverage();
-            double sensitivity = 1 ;
+            double sensitivity = 1;
 
             if(data.Temperature > (average + sensitivity) || data.Temperature < (average - sensitivity))
             {
@@ -75,11 +83,10 @@ namespace SensorSim.Models
             return false;
         }
 
-
         public double FindRecentAverage()
         {
             var repo = new DataRepo();
-            var history = repo.GetRecentTemps();
+            var history = repo.GetAverageTemps();
 
             double average = 0;
 

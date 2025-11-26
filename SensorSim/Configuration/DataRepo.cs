@@ -52,7 +52,7 @@ namespace SensorSim.Configuration
             return results;
         }
 
-        public List<double> GetRecentTemps()
+        public List<double> GetAverageTemps()
         {
             var results = new List<double>();
 
@@ -66,6 +66,31 @@ namespace SensorSim.Configuration
                 FROM SensorData
                 ORDER BY Id DESC
                 LIMIT 15;
+            ";
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                results.Add(reader.GetDouble(0));
+            }
+
+            return results;
+        }
+
+        public List<double> GetRecentTemps()
+        {
+            var results = new List<double>();
+
+            using var connection = new SqliteConnection(Database.ConnectionString);
+            connection.Open();
+
+            var cmd = connection.CreateCommand();
+            cmd.CommandText =
+            @"
+                SELECT Temperature
+                FROM SensorData
+                ORDER BY Id DESC
+                LIMIT 5;
             ";
 
             using var reader = cmd.ExecuteReader();

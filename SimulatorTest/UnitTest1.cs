@@ -76,14 +76,85 @@ namespace SensorSim.Test
             Assert.Equal("hello", sanitized);
 
         }
+
+        [Fact]
+        public void StartSimulation()
+        {
+
+        }
+
+        [Fact]
+        public void StopSimulation()
+        {
+
+        }
     }
 
     public class DataTests
     {
+        // Checks if simulated data is between the correct range
+        [Fact]
+        public void GetRandomDataValue() 
+        {
+            // Arrange
+            var newSensor = new Sensor(1, "Name", "Location", 10, 15);
+            var newData = new Data();
+            double min = newSensor.MinTemp;
+            double max = newSensor.MaxTemp;
+
+            // Act
+            newData = newData.SimulateData(newSensor);
+
+            // Assert 
+            Assert.InRange(newData.Temperature, min, max);
+        }
 
         [Fact]
-        public void GetDataFrom() 
-        { 
+        public void DoesNotValidateEmptyData()
+        {
+            // Arrange 
+            var newSensor = new Sensor(1, "Name", "Location", 10, 15);
+            var newData = new Data();
+
+            // Act
+            bool valid = newData.ValidateData(newData, newSensor);
+
+            // Assert
+            Assert.False(valid);
+        }
+
+        [Fact]
+        public void ValidateData()
+        {
+            // Arrange 
+            var newSensor = new Sensor(1, "Name", "Location", 10, 15);
+            var newData = new Data();
+            newData.SensorName = "Name";
+            newData.Temperature = 11;
+            newData.DateTime = DateTime.Now;
+
+            // Act
+            bool valid = newData.ValidateData(newData, newSensor);
+
+            // Assert
+            Assert.True(valid);
+        }
+
+        [Fact]
+        public void FormatsDataCorrect()
+        {
+            // Arrange
+            var newData = new Data();
+            newData.SensorName = "Name";
+            newData.Temperature = 11.123456789;
+            newData.DateTime = new DateTime(2025, 1, 1, 12, 30, 0);
+
+            // Act
+            string dataFormat = newData.LogData(newData);
+            string expected = "12:30:00 Temperature: 11.12 °C";
+
+            // Assert
+            Assert.Equal(expected, dataFormat);
 
         }
     }

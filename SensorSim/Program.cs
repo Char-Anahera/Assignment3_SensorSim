@@ -5,16 +5,21 @@ namespace Sensors
 {
      internal static class Program
     {
+        // boolean to check if simulator has been requested to stop
         private static bool exitSimulation = false;
+
         private static void Main(string[] args)
         {
             try
             {
+                // prints line to inform user they can quit at any time
                 Console.WriteLine("Press Q at any time to quit");
 
+                // creates a new thread and calls on detectKey method to check if quit has been requested
                 Thread keyDetectionThread = new Thread(DetectKey);
                 keyDetectionThread.Start();
 
+                //starts sensor loop
                 Sensor.StartSensor();
 
             }
@@ -30,6 +35,7 @@ namespace Sensors
             }
         }
 
+        // method to check if Q key has been pressed
         private static void DetectKey()
         {
             while (!exitSimulation)

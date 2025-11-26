@@ -6,63 +6,63 @@ using System.Threading.Tasks;
 
 namespace SensorSim.Models
 {
-    
     public class Data
     {
+        // Set RNG for simulating a temperature.
         private static readonly Random Random = new();
 
-
+        // defines attributes of data
         public string SensorName { get; set; }
         public double Temperature {  get; set; }
         public DateTime DateTime { get; set; }
 
 
-        
-
+        // Simulate data method. Uses parsed sensor as parameters, returns the data it simulated
         public Data SimulateData(Sensor sensor)
         {
-            double variation = 5.0;
-            double mean = (sensor.MinTemp + sensor.MaxTemp) / 2;
-
+            // While loop to try again for data if it is not valid
             while (true)
             {
-                double temperature = mean + (Random.NextDouble() * 2 - 1) * variation;
+                // rng to generate a temperature based on sensors min and max
+                double temperature = (Random.NextDouble()*(sensor.MaxTemp - sensor.MinTemp) + sensor.MinTemp);
                 var newData = new Data();
 
+                // set data attributes
                 newData.SensorName = sensor.Name;
                 newData.Temperature = temperature;
                 newData.DateTime = DateTime.Now;
 
+                // validation check
                 if (ValidateData(newData, sensor))
                 {
+                    // returns validated data
                     return newData;
                 }
             }
         }
 
+        // check for if data is valid, based on the sensors parameters
         public bool ValidateData(Data sensorData, Sensor sensor)
         {
+            // Checks if data exists and if it falls between the sensors set range
             if (sensorData == null) return false;
             if (sensorData.Temperature < sensor.MinTemp) return false;
             if (sensorData.Temperature > sensor.MaxTemp) return false;
+
+            // Returns true if passes
             else return true;
         }
 
-
+        // Log data method, calls the storeData method and returns a formatted string
         public string LogData(Data sensorData)
         {
             Data.StoreData(sensorData);
 
-            return $"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature} °C";
+            return $"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C";
         }
 
 
         public static void StoreData(Data sensorData)
-        {
-
-        }
-
-        public void StopSensor()
         {
 
         }

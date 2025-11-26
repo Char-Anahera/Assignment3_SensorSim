@@ -1,4 +1,5 @@
 ﻿using System;
+using SensorSim.Configuration;
 using SensorSim.Models;
 
 namespace Sensors
@@ -8,10 +9,13 @@ namespace Sensors
         // boolean to check if simulator has been requested to stop
         private static bool exitSimulation = false;
 
+
         private static void Main(string[] args)
         {
             try
             {
+                Database.Initialize();
+
                 // prints line to inform user they can quit at any time
                 Console.WriteLine("Press Q at any time to quit");
 

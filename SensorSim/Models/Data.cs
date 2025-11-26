@@ -17,7 +17,6 @@ namespace SensorSim.Models
         public double Temperature {  get; set; }
         public DateTime DateTime { get; set; }
 
-
         // Simulate data method. Uses parsed sensor as parameters, returns the data it simulated
         public Data SimulateData(Sensor sensor)
         {
@@ -57,7 +56,9 @@ namespace SensorSim.Models
         // Log data method, calls the storeData method and returns a formatted string
         public void LogData(Data sensorData)
         {
-            DataRepo.StoreData(sensorData);
+            var repo = new DataRepo();
+
+            repo.StoreData(sensorData);
 
             Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
         }

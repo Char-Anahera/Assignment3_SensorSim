@@ -36,7 +36,7 @@ namespace SensorSim.Configuration
             connection.Open();
 
             var selectCmd = connection.CreateCommand();
-            selectCmd.CommandText = "SELECT * FROM SensorData;";
+            selectCmd.CommandText = "SELECT SensorName, Temperature, RecordedAt FROM SensorData;";
 
             using var reader = selectCmd.ExecuteReader();
             while (reader.Read())

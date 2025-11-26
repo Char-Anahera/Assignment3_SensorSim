@@ -21,7 +21,7 @@ namespace SensorSim.Configuration
             tableCmd.CommandText =
                 @"
                     CREATE TABLE IF NOT EXISTS SensorData(
-                        Id INTEGER PRIMARY KEY AUTOINCRREMENT,
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         SensorName TEXT,
                         Temperature REAL,
                         RecordedAt TEXT);";

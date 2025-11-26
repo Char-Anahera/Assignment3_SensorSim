@@ -70,8 +70,8 @@ namespace SensorSim.Models
                 Console.WriteLine("Unusual reading. Anomaly detected.");
             }
 
-            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2}°C");
-            Console.WriteLine($" Average Temperature: {SmoothData():F2}°C");
+            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss}     Temperature: {sensorData.Temperature:F2}°C");
+            Console.WriteLine($"            Average: {SmoothData():F2}°C");
             Console.WriteLine();
         }
 

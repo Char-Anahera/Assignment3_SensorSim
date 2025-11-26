@@ -129,9 +129,8 @@ namespace SensorSim.Models
                 var data = new Data();
                 var sensorData = data.SimulateData(newSensor);
 
-                // calls logData to format simulated data and store to the database. Then prints data
-                string formattedData = sensorData.LogData(sensorData);
-                Console.WriteLine(formattedData);
+                // calls logData method
+                sensorData.LogData(sensorData);
 
                 // pauses simulator
                 Thread.Sleep(1000);

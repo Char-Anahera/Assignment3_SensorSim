@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SensorSim.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SensorSim.Models
 {
@@ -15,7 +17,6 @@ namespace SensorSim.Models
         public string SensorName { get; set; }
         public double Temperature {  get; set; }
         public DateTime DateTime { get; set; }
-
 
         // Simulate data method. Uses parsed sensor as parameters, returns the data it simulated
         public Data SimulateData(Sensor sensor)
@@ -54,17 +55,49 @@ namespace SensorSim.Models
         }
 
         // Log data method, calls the storeData method and returns a formatted string
-        public string LogData(Data sensorData)
+        public void LogData(Data sensorData)
         {
-            Data.StoreData(sensorData);
+            var repo = new DataRepo();
 
-            return $"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C";
+            repo.StoreData(sensorData);
+
+            if (DetectAnomaly(sensorData))
+            {
+                Console.WriteLine("Unusual reading. Anomaly detected.");
+            }
+
+            Console.WriteLine($"{sensorData.DateTime:HH:mm:ss} Temperature: {sensorData.Temperature:F2} °C");
+            Console.WriteLine();
         }
 
 
-        public static void StoreData(Data sensorData)
+        public bool DetectAnomaly(Data data)
         {
+            double average = FindRecentAverage();
+            double sensitivity = 1;
 
+            if(data.Temperature > (average + sensitivity) || data.Temperature < (average - sensitivity))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public double FindRecentAverage()
+        {
+            var repo = new DataRepo();
+            var history = repo.GetAverageTemps();
+
+            double average = 0;
+
+            foreach(var t in history)
+            {
+                average += t;
+            }
+
+            average = average / history.Count;
+
+            return average;
         }
     }
 }
